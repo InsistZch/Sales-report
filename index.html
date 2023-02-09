@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./node_modules/ag-grid-enterprise/dist/ag-grid-enterprise.js"></script>
+    <link rel="stylesheet" href="./node_modules/ag-grid-enterprise/styles/ag-grid.css" />
+    <link rel="stylesheet" href="./node_modules/ag-grid-enterprise/styles/ag-theme-alpine.css">
+    
+    <!-- bootstrap -->
+    <link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <script src="./node_modules/@popperjs/core/dist/umd/popper.min.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <style>
+        body,html{
+            margin: 0;
+        }
+        .ag-theme-alpine[class^=ag-]{
+            --ag-font-size: 12px;
+            --ag-grid-size: 4px;
+            --ag-list-item-height: 40px;
+            --ag-row-height: 40px;
+
+            --ag-header-height: 30px;
+
+            --ag-header-column-separator-display: block;
+            --ag-header-column-separator-height: 100%;
+            --ag-header-column-separator-width: 1px;
+            --ag-header-column-separator-color: #afafaf;
+
+            --ag-header-column-resize-handle-display: block;
+            --ag-header-column-resize-handle-height: 25%;
+            --ag-header-column-resize-handle-width: 1px;
+            --ag-header-column-resize-handle-color: #afafaf;
+                }
+        .parent{
+            display: flex;
+            align-items: center;
+        }
+        .showAndHide{
+            margin: 1rem;
+        }
+        .selectDate{
+            height: max-content;
+        }
+        .showCash{
+            margin-left: 1rem;
+        }
+        .isHide{
+            display: none;
+        }
+        .preservation{
+            margin-left: 1rem;
+        }
+    </style>
+    <link rel="stylesheet" href="./css/modal.css">
+</head>
+<body>
+    <!-- <div class="alert alert-danger" role="alert">
+       修改失败
+    </div> -->
+    <div class="alert alert-warning isHide" id="updateTips" role="alert">
+       已修改，未保存
+    </div>
+    <div class="parent" style="display: flex; padding: 1rem 0;">
+        <button class="showAndHide" id="showAndHide">展开</button>
+        <select class="selectDate" id="selectDate">
+
+        </select>
+        <button class="showCash" id="showCash">隐藏单价列</button>
+        <button class="preservation" id="preservation">保存</button>
+    </div>
+    <div id="myGrid" class="ag-theme-alpine" style="height: 600px;">
+    </div>
+
+
+    <div class="parent" style="display: flex; padding: 1rem 0;">
+        <button class="showAndHide" id="showAndHide2">展开</button>
+        <select class="selectDate" id="selectDate2">
+
+        </select>
+        <button class="showCash" id="showCash2">隐藏单价列</button>
+        <button class="preservation" id="preservation2">保存</button>
+    </div>
+    <div id="myGrid2" class="ag-theme-alpine" style="height: 600px; margin: 50px 0;">
+    </div>
+    
+    <div id="addMeal" class="modalcustom">
+
+        <div class="modal-contentcustom">
+    
+            <header class="modal-headercustom">
+                <h4 class="customcustom">新增餐</h4>
+                <span class="closecustom" id="addMeal_cancel1">×</span>
+            </header>
+            
+            <div class="modal-bodycustom modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">餐别</span>
+                    </div>
+                    <select type="text" id="addMeal_category" class="form-control" placeholder="餐别" aria-describedby="basic-addon1">
+                        <option value="dn1">早餐</option>
+                        <option value="dn2" selected>中餐</option>
+                        <option value="dn3">晚餐</option>
+                        <option value="dn5">夜餐</option>
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon2">类型</span>
+                    </div>
+                    <select type="text" id="addMeal_type" class="form-control" placeholder="类型" aria-describedby="basic-addon2">
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    添加其他类型
+                </button>
+            </div>
+    
+            <footer class="modal-footercustom">
+                <button id="addMeal_cancel2">取消</button>
+                <button id="addMeal_sure">确定</button>
+            </footer>
+        </div>
+    </div>
+    <div id="updateMealPrice" class="modalcustom">
+
+        <div class="modal-contentcustom">
+            <header class="modal-headercustom">
+                <h4 class="customcustom">修改餐单价</h4>
+                <span class="closecustom" id="updateMealPrice_cancel1">×</span>
+            </header>
+            
+            <div class="modal-bodycustom modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">餐别</span>
+                    </div>
+                    <select type="text" id="updateMealPrice_category" class="form-control" placeholder="餐别" aria-describedby="basic-addon1">
+                    </select>
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon2">单价</span>
+                    </div>
+                    <input type="number" id="updateMealPrice_price" class="form-control" placeholder="单价" aria-describedby="basic-addon2">
+                </div>
+            </div>
+    
+            <footer class="modal-footercustom">
+                <button id="updateMealPrice_cancel2">取消</button>
+                <button id="updateMealPrice_sure">确定</button>
+            </footer>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">新增其他类型</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group flex-nowrap">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="addon-wrapping">类型名称</span>
+                    </div>
+                    <input type="text" class="form-control" id="cate_name" placeholder="类型名称" aria-label="类型名称" aria-describedby="addon-wrapping">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="addCategory_sure">确认新增</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div id="addMeal2" class="modalcustom">
+
+        <div class="modal-contentcustom">
+    
+            <header class="modal-headercustom">
+                <h4 class="customcustom">新增餐</h4>
+                <span class="closecustom" id="addMeal2_cancel1">×</span>
+            </header>
+            
+            <div class="modal-bodycustom modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon2">餐品名称</span>
+                    </div>
+                    <input type="text" id="addMeal2_name" class="form-control" placeholder="餐品名称" aria-describedby="basic-addon2">
+                </div>
+            </div>
+    
+            <footer class="modal-footercustom">
+                <button id="addMeal2_cancel2">取消</button>
+                <button id="addMeal2_sure">确定</button>
+            </footer>
+        </div>
+    </div>
+</body>
+<script type="module">
+    import agGridOption from './js/ag-grid-option.js'
+    import agGridOption2 from './js/table2/ag-grid-option.js'
+    import { resetData as rd } from "./js/ag-grid-row.js"
+    import { resetData as rd2 }  from "./js/table2/ag-grid-row.js"
+    import {showAndHide, selectDate, preservation, showCash} from './js/public/api.js'
+    document.addEventListener("DOMContentLoaded", function () {
+        const eGridDiv = document.querySelector('#myGrid');
+        new agGrid.Grid(eGridDiv, agGridOption);
+        agGridOption.api.sizeColumnsToFit();
+        showAndHide(document.querySelector('button#showAndHide'), agGridOption)
+        selectDate(document.querySelector('#selectDate'), agGridOption, rd)
+        showCash(document.querySelector('#showCash'), agGridOption)
+        preservation(document.querySelector('button#preservation'),agGridOption)
+        // 表二
+        const eGridDiv2 = document.querySelector('#myGrid2')
+        new agGrid.Grid(eGridDiv2, agGridOption2)
+        showAndHide(document.querySelector('button#showAndHide2'), agGridOption2)
+        selectDate(document.querySelector('#selectDate2'), agGridOption2, rd2)
+        showCash(document.querySelector('#showCash2'), agGridOption2)
+        preservation(document.querySelector('button#preservation2'), agGridOption2)
+    });
+</script>
+</html>
